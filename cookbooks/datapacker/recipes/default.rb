@@ -1,0 +1,3 @@
+depends "haskell"
+
+package "datapacker"
