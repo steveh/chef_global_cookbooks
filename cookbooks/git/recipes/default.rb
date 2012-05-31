@@ -1,6 +1,4 @@
-if platform?("mac_os_x")
-  package "git"
-elsif platform?("ubuntu")
+if platform?("ubuntu")
   package "git-core"
 else
   package "git"
