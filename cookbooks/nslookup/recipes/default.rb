@@ -1,6 +1,6 @@
 if platform?("mac_os_x")
   # built in
-elsif platform?("ubuntu")
+elsif platform?("ubuntu") || platform?("debian")
   package "dnsutils"
 elsif platform?("freebsd")
   package "bind-tools"

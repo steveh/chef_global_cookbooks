@@ -1,6 +1,6 @@
 if platform?("mac_os_x")
   package "mysql"
-elsif platform?("ubuntu")
+elsif platform?("ubuntu") || platform?("debian")
   package "mysql-server-5.5"
 elsif platform?("freebsd")
   package "mysql55-server"
