@@ -4,7 +4,7 @@ elsif platform?("ubuntu")
   package "openjdk-6-jre"
   package "openjdk-6-jdk"
 elsif platform?("freebsd")
-  package "openjdk-7"
+  package "openjdk7"
 else
   raise "not implemented"
 end

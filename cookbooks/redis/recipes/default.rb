@@ -1,6 +1,6 @@
-if platform?("mac_os_x")
-  package "redis"
-else
+if platform?("ubuntu")
   package "redis-server"
+else
+  package "redis"
 end
 

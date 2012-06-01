@@ -1,6 +1,6 @@
-if platform?("mac_os_x")
-  package "go"
-else
+if platform?("ubuntu")
   package "golang"
+else
+  package "go"
 end
 

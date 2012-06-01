@@ -1,5 +1,8 @@
-if platform?("mac_os_x")
+if platform?("mac_os_x") || platform?("freebsd")
   # built in
-else
+elsif platform?("ubuntu")
   package "xz-utils"
+else
+  package "xz"
 end
+
