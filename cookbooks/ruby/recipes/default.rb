@@ -9,6 +9,10 @@ elsif platform?("ubuntu")
   package "libyaml-dev"
 elsif platform?("freebsd")
   package "ruby19"
+  package "libxml2"
+  package "libxslt"
+  package "libyaml"
 end
 
 gem_package "bundler"
+
