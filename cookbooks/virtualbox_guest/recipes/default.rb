@@ -1,4 +1,4 @@
-if platform?("ubuntu")
+if platform?("ubuntu") || platform?("debian")
   package "virtualbox-guest-additions"
 elsif platform?("freebsd")
   package "virtualbox-ose-additions"

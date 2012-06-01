@@ -1,4 +1,4 @@
-if platform?("ubuntu")
+if platform?("ubuntu") || platform?("debian")
   package "deluged"
 elsif platform?("freebsd")
   package "deluge"
