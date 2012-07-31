@@ -1,0 +1,1 @@
+depends "current_version"

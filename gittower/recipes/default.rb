@@ -12,6 +12,6 @@ directory "/usr/local/bin" do
   action :create
 end
 
-link "/Applications/Tower.app/Contents/MacOS/gittower"
-  to "/usr/local/bin/gittower"
+link "/usr/local/bin/gittower" do
+  to "/Applications/Tower.app/Contents/MacOS/gittower"
 end

@@ -13,8 +13,8 @@ directory "/usr/local/bin" do
 end
 
 if platform?("mac_os_x")
-  link "/Applications/Sublime Text 2.app/Contents/SharedSupport/bin/subl"
-    to "/usr/local/bin/subl"
+  link "/usr/local/bin/subl" do
+    to "/Applications/Sublime Text 2.app/Contents/SharedSupport/bin/subl"
   end
 else
   raise "Not implemented"

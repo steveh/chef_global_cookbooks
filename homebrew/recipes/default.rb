@@ -10,7 +10,3 @@ execute "install homebrew" do
   cwd "/usr/local"
   not_if { File.exist? '/usr/local/bin/brew' }
 end
-
-execute "update homebrew from github" do
-  command "/usr/local/bin/brew update || true"
-end
