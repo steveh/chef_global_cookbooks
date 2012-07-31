@@ -5,4 +5,3 @@ elsif platform?("ubuntu") || platform?("debian")
 else
   package "xz"
 end
-

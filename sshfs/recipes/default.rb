@@ -3,4 +3,3 @@ if platform?("freebsd")
 else
   package "sshfs"
 end
-

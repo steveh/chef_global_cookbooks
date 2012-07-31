@@ -17,30 +17,26 @@ class Chef
         end
 
         def install_package(name, version)
-          options = expand_options(@new_resource.options)
-          brew('install', name, options)
+          brew('install', @new_resource.options, name)
         end
 
-        # Homebrew doesn't really have a notion of upgrading packages, just
-        # install the latest version?
         def upgrade_package(name, version)
-          install_package(name, version)
+          brew('upgrade', name)
         end
 
         def remove_package(name, version)
-          brew('uninstall', name)
+          brew('uninstall', @new_resource.options, name)
         end
 
         # Homebrew doesn't really have a notion of purging, so just remove.
         def purge_package(name, version)
+          @new_resource.options = ((@new_resource.options || "") << " --force").strip
           remove_package(name, version)
         end
 
         protected
         def brew(*args)
-          run_command_with_systems_locale(
-            :command => "brew #{args.join(' ')}"
-          )
+          get_response_from_command("brew #{args.join(' ')}")
         end
 
         def current_installed_version
@@ -48,7 +44,8 @@ class Chef
         end
 
         def candidate_version
-          get_version_from_command("brew info #{@new_resource.package_name} | awk '/^#{@new_resource.package_name} / { print $2 }'")
+          # get_version_from_command("brew info #{@new_resource.package_name} | awk '/^#{@new_resource.package_name} / { print $2 }'")
+          get_version_from_command("brew info #{@new_resource.package_name} | awk '/^#{@new_resource.package_name}: / { print $0 }' | sed 's/.*stable \\([^ ,]*\\).*/\\1/'")
         end
 
         def get_version_from_command(command)
