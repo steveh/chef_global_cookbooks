@@ -3,7 +3,3 @@ if platform?("freebsd")
 else
   package "haskell-platform"
 end
-
-raise "Incomplete package, see notes"
-
-# Does not cabal-update
