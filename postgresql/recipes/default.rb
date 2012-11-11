@@ -1,5 +1,3 @@
-include_recipe "current_version"
-
 if platform?("freebsd")
   package "postgresql91-server"
 else
@@ -13,6 +11,8 @@ end
 package "postgis"
 
 if platform?("mac_os_x")
+  include_recipe "current_version"
+
   cookbook_file "/etc/sysctl.conf" do
     owner "root"
     group "wheel"
@@ -31,13 +31,10 @@ if platform?("mac_os_x")
     action :create
   end
 
-  file "#{db_directory}/server.log" do
-    owner db_user
-  end
-
   execute "initdb" do
     user db_user
     command "test -f #{db_directory}/PG_VERSION || /usr/local/bin/initdb #{db_directory}"
+    # -U postgres --encoding=utf8 --locale=en_US /usr/local/var/postgres
   end
 
   current_version = package_current_version("postgresql")
@@ -53,5 +50,9 @@ if platform?("mac_os_x")
   execute "postgis" do
     user db_user
     command "psql -h 127.0.0.1 -d #{db_name} -c \"CREATE EXTENSION IF NOT EXISTS postgis;\""
+  end
+
+  file "#{db_directory}/server.log" do
+    owner db_user
   end
 end

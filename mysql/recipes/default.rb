@@ -8,43 +8,51 @@ else
   raise "not implemented"
 end
 
-raise "Incomplete package, see notes"
+if platform?("mac_os_x")
+  include_recipe "current_version"
 
-# Set up databases to run AS YOUR USER ACCOUNT with:
-#     unset TMPDIR
-#     mysql_install_db --verbose --user=`whoami` --basedir="$(brew --prefix mysql)" --datadir=/usr/local/var/mysql --tmpdir=/tmp
+  db_user = "steve"
+  db_directory = "/usr/local/var/mysql"
 
-# To set up base tables in another folder, or use a different user to run
-# mysqld, view the help for mysqld_install_db:
-#     mysql_install_db --help
+  directory db_directory do
+    owner db_user
+    group "wheel"
+    mode "0700"
+    action :create
+  end
 
-# and view the MySQL documentation:
-#   * http://dev.mysql.com/doc/refman/5.5/en/mysql-install-db.html
-#   * http://dev.mysql.com/doc/refman/5.5/en/default-privileges.html
+  # execute "mysql_install_db" do
+  #   command "mysql_install_db --verbose --user=#{db_user} --basedir=\"$(brew --prefix mysql)\" --datadir=#{db_directory} --tmpdir=/tmp"
+  # end
 
-# To run as, for instance, user "mysql", you may need to `sudo`:
-#     sudo mysql_install_db ...options...
+  # ruby_block "mysql_install_db" do
+  #   block do
+  #     active_mysql = Pathname.new("/usr/local/bin/mysql").realpath
+  #     basedir = (active_mysql + "../../").to_s
+  #     data_dir = "/usr/local/var/mysql"
+  #     system("mysql_install_db --verbose --user=#{WS_USER} --basedir=#{basedir} --datadir=#{data_dir} --tmpdir=/tmp && chown #{WS_USER} #{data_dir}") || raise("Failed initializing mysqldb")
+  #   end
+  #   not_if { File.exists?("/usr/local/var/mysql/mysql/user.MYD")}
+  # end
 
-# Start mysqld manually with:
-#     mysql.server start
+# execute "set the root password to the default" do
+#   command "mysqladmin -uroot password #{DEFAULT_PIVOTAL_MYSQL_PASSWORD}"
+#   not_if "mysql -uroot -p#{DEFAULT_PIVOTAL_MYSQL_PASSWORD} -e 'show databases'"
+# end
 
-#     Note: if this fails, you probably forgot to run the first two steps up above
+# execute "insert time zone info" do
+#   command "mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql -uroot -p#{DEFAULT_PIVOTAL_MYSQL_PASSWORD} mysql"
+#   not_if "mysql -uroot -p#{DEFAULT_PIVOTAL_MYSQL_PASSWORD} mysql -e 'select * from time_zone_name' | grep -q UTC"
+# end
 
-# A "/etc/my.cnf" from another install may interfere with a Homebrew-built
-# server starting up correctly.
+  current_version = package_current_version("mysql")
 
-# To connect:
-#     mysql -uroot
+   cookbook_file "/Library/LaunchAgents/homebrew.mxcl.mysql.plist" do
+    owner "root"
+    group "wheel"
+    mode "0755"
+    source "homebrew.mxcl.mysql.plist"
+  end
 
-# To launch on startup:
-# * if this is your first install:
-#     mkdir -p ~/Library/LaunchAgents
-#     cp /usr/local/Cellar/mysql/5.5.25a/homebrew.mxcl.mysql.plist ~/Library/LaunchAgents/
-#     launchctl load -w ~/Library/LaunchAgents/homebrew.mxcl.mysql.plist
-
-# * if this is an upgrade and you already have the homebrew.mxcl.mysql.plist loaded:
-#     launchctl unload -w ~/Library/LaunchAgents/homebrew.mxcl.mysql.plist
-#     cp /usr/local/Cellar/mysql/5.5.25a/homebrew.mxcl.mysql.plist ~/Library/LaunchAgents/
-#     launchctl load -w ~/Library/LaunchAgents/homebrew.mxcl.mysql.plist
-
-# You may also need to edit the plist to use the correct "UserName".
+  execute "launchctl load -w /Library/LaunchAgents/homebrew.mxcl.mysql.plist"
+end
